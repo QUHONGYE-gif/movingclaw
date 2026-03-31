@@ -178,7 +178,30 @@ sudo tailscale up --exit-node=100.x.x.x --exit-node-allow-lan-access --accept-ro
 ```bash
 sudo tailscale up --exit-node=
 ```
+##### **常见问题**
+1. **magicdns配置问题**
 
+    - **症状**：虽然前边的配置成功了，但是在实际使用的时候，仍然没有完全走的电脑的隧道流量，速度很慢
+    - **原因**：由于树莓派的系统特殊性，其系统管理器默认使用路由器的dns，而tailscale的本质原理是通过magicdns修改dns地址，这两者之间发生dns冲突，导致解析延迟和连接到很远的服务器而不是通过隧道连接本地电脑作为流量出口
+- 问题检查
+```bash
+ tailscale status
+ ```
+- 如果出现`Health check: overwritten`就代表存在这个问题
+- 解决方案：https://tailscale.com/docs/reference/faq/dns-resolv-conf
+  - 确保在处理之前隧道出口设备开启了`Allow Exit Node`
+  - 使用**systemd-resolved**，由它进行统一的dns自动调度，更加现代化，避免冲突
+    ```bash
+    sudo apt update && sudo apt install systemd-resolved -y #下载安装
+    sudo systemctl enable --now systemd-resolved #开机自启动
+    sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf #接管dns配置服务
+    sudo tailscale up --exit-node=100.82.30.32 --exit-node-allow-lan-access --reset #启动tailscale并设置出口节点（替换成自己的tailscale出口的序号）
+    ```
+- 检查
+  ```bash
+  resolvectl status
+  ```
+  - 只要输出`resolv.conf mode: stub`，`Global` (全局)：出现了 `100.100.100.100 `和 `tail8b7421.ts.net`，`Link 3 (wlan0)`：识别到了你树莓派连接的 Wi-Fi 路由器 DNS，
 
 ### scp传输
 - scp传输利用 SSH 加密通道进行设备之间的快速传输
