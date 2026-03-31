@@ -173,6 +173,14 @@ sudo tailscale up --exit-node=100.x.x.x --exit-node-allow-lan-access --accept-ro
 ```
 - `curl ip.gs`测试，检查ip是否是另一台设备的出口ip
 
+- 永久化配置：
+```bash
+nano ~/.bashrc # 打开环境配置文件
+export http_proxy="http://<你电脑的IP>:7890"
+export https_proxy="http://<你电脑的IP>:7890"
+source ~/.bashrc #立刻生效
+```
+`Ctrl+O -> Enter -> Ctrl+X`
 
 - 恢复：直接卸载出口节点
 ```bash

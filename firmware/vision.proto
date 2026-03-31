@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+message VideoFrame {
+    bytes image_data = 1;     // JPEG压缩数据
+    int32 width = 2;          //
+    int32 height = 3;         //
+    double timestamp = 4;     //
+    int32 quality = 5;        // 压缩质量(1-100)
+}
+
+message BoundingBox {
+    int32 x = 1;              //
+    int32 y = 2;              //
+    int32 width = 3;          //
+    int32 height = 4;         //
+    string label = 5;         //
+    float confidence = 6;     //
+}
+
+message VisionResponse {
+    repeated BoundingBox detections = 1; //
+}
+
+service VisionService {
+    rpc StreamVideo(stream VideoFrame) returns (stream VisionResponse); //
+}
