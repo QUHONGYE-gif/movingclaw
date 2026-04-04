@@ -139,15 +139,11 @@ python vision_server.py
 ```bash
 pip install grpcio grpcio-tools opencv-python-headless numpy
 ```
-<<<<<<< HEAD
+
 3. 创建[契约文件](../test/vision.proto)
 4. 编译(同上)
 5. 运行
-=======
-1. 创建[契约文件](../firmware/vision.proto)
-2. 编译(同上)
-3. 运行
->>>>>>> 849eac1 (增添了通信协议的搭建文档和测试代码)
+   
 ```bash
 python vision_client.py
 ```
